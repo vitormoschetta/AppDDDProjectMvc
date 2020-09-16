@@ -1,0 +1,16 @@
+<script>  
+
+    function PaginacaoCliente(pageNumber) {
+        var url = '@Url.Action("Paginacao","Cliente")'; 
+        Paginacao(pageNumber, url);
+    }
+
+    function ProcurarCliente(parametro) {
+        var url = '@Url.Action("Search","Cliente")';         
+        Search(parametro, url);
+    }
+    
+</script>
+
+
+
