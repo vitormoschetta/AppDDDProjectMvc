@@ -57,7 +57,10 @@ namespace AppDDDProject.Domain.Handlers
             var cliente = _repository.GetById(command.Id);
 
             // Atualiza
-            cliente.AtualizaNomeEDataNascimento(command.Nome, command.DataNascimento);
+            cliente.AtualizaCliente("", command.Email);
+
+            // Agrupar as Validações
+            AddNotifications(command, cliente);
 
             // Checa se existem notificações
             if (Invalid)

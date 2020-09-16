@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AppDDDProject.Domain.Commands;
 using AppDDDProject.Domain.Entities;
 using AppDDDProject.Domain.Repositories;
 
@@ -9,54 +8,81 @@ namespace AppDDDProject.Tests.Fakes
 {
     public class FakeClienteRepository : IClienteRepository
     {
-
+        private readonly List<Cliente> listaClientes;
+        public FakeClienteRepository()
+        {
+            listaClientes = new List<Cliente>() {
+                new Cliente(new Guid("C56A4180-65AA-42EC-A945-5FD21DEC0537"), "Vitor", DateTime.Now, "00000000000", "vitormoschetta@gmail.com"),
+                new Cliente(new Guid("C56A4180-65AA-42EC-A945-5FD21DEC0538"), "teste", DateTime.Now, "00000000001", "teste@gmail.com"),
+                new Cliente(new Guid("C56A4180-65AA-42EC-A945-5FD21DEC0539"), "teste", DateTime.Now, "00000000001", "teste@gmail.com"),
+            };
+        }
 
         public bool CpfExists(string cpf)
         {
-            if (cpf == "00000000000")
-                return true;
+            foreach (var item in listaClientes)
+            {
+                if (cpf == item.Cpf)
+                    return true;
+            }
 
             return false;
         }
 
-        public bool Exist(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Cliente>> Procurar(string parametro)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CreateCliente(Cliente cliente)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Create(Cliente cliente)
         {
-            throw new NotImplementedException();
+            listaClientes.Add(cliente);
         }
 
-        public void Update(Cliente cliente)
-        {
-            throw new NotImplementedException();
-        }
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            foreach (var item in listaClientes)
+            {
+                if (id == item.Id)
+                    listaClientes.Remove(item);
+            }
         }
 
-        public Cliente GetById(Guid id)
+        public bool Exist(Guid id)
         {
-            throw new NotImplementedException();
+            foreach (var item in listaClientes)
+            {
+                if (id == item.Id)
+                    return true;
+            }
+
+            return false;
         }
 
         public IEnumerable<Cliente> GetAll()
         {
-            throw new NotImplementedException();
+            return listaClientes;
         }
+
+        public Cliente GetById(Guid id)
+        {
+            foreach (var item in listaClientes)
+            {
+                if (id == item.Id)
+                    return item;
+            }
+
+            return null;
+        }
+
+        public void Update(Cliente cliente)
+        {
+            foreach (var item in listaClientes)
+            {
+                if (cliente.Id == item.Id)
+                {
+                    listaClientes.Remove(item);
+                    listaClientes.Add(cliente);
+                }
+
+            }
+        }
+
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using AppDDDProject.Domain.Commands;
 using AppDDDProject.Domain.Handlers;
 using AppDDDProject.Tests.Fakes;
@@ -9,44 +10,39 @@ namespace AppDDDProject.Tests.Handlers
     public class ClienteHandlerTest
     {
         [TestMethod]
-        public void CpfJaExiste()
-        {
-            var handler = new ClienteHandler(new FakeClienteRepository());
-            var command = new ClienteCommand();
-            command.Nome = "Vitor";
-            command.Cpf = "00000000000";
-            command.Email = "vitormoschetta@gmail.com";
-
-            handler.Create(command);
-            Assert.AreEqual(false, handler.Valid);
-        }
-
-
-        [TestMethod]
-        public void EmailInvalido()
-        {
-            var handler = new ClienteHandler(new FakeClienteRepository());
-            var command = new ClienteCommand();
-            command.Nome = "Vitor";
-            command.Cpf = "99999999999";
-            command.Email = "vitormoschetta@gmail.com";
-
-            handler.Create(command);
-            Assert.AreEqual(true, handler.Valid);
-        }
-
-
-        [TestMethod]
         public void ClienteHandlerValido()
         {
             var handler = new ClienteHandler(new FakeClienteRepository());
-            var command = new ClienteCommand();
-            command.Nome = "Vitor";
-            command.Cpf = "99999999999";
-            command.Email = "vitor.suporte@gmail.com";
-
+            var command = new ClienteCommand()
+            {
+                Nome = "Vitor",
+                Cpf = "99999999999",
+                Email = "vitor.suporte@gmail.com",
+                DataNascimento = DateTime.Now,
+            };
             handler.Create(command);
-            Assert.AreEqual(true, handler.Valid);
+            Assert.IsTrue(handler.Valid);
         }
+
+
+        // Aqui não dá pra testar as propriedades invalidas, pos o Handler sempre seria Valid true. 
+        // Isso por causa do Fast Fail Validate => O Command aplica a validação antes de prosseguir nos 
+        // demais processos do Handler.
+
+        [TestMethod]
+        public void Se_cpf_ja_existe()
+        {
+            var handler = new ClienteHandler(new FakeClienteRepository());
+            var command = new ClienteCommand()
+            {
+                Nome = "Vitor",
+                Cpf = "00000000000",
+                Email = "vitor.suporte@gmail.com",
+                DataNascimento = DateTime.Now,
+            };
+            handler.Create(command);
+            Assert.IsTrue(handler.Invalid);
+        }
+
     }
 }
