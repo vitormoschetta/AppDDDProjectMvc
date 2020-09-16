@@ -95,7 +95,7 @@ Restaurar dependências/pacotes (executar na raiz do projeto)
 dotnet restore
 ```
 
-Executar o projeto MVC com o seguinte comando (na pasta da Api):
+Executar o projeto MVC com o seguinte comando (na pasta da AppMvc):
 ```
 dotnet run
 ```
