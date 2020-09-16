@@ -1,13 +1,24 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppDDDProject.AppMvc.Models
 {
     public class Cliente
     {
         public Guid Id { get; set; }
-        public string Nome { get; private set; }
-        public DateTime DataNascimento { get; private set; }
-        public string Cpf { get; private set; }
-        public string Email { get; private set; }
+
+
+        [Required(ErrorMessage = "Preenchimento obrigatório")]
+        public string Nome { get; set; }
+
+
+        [Required(ErrorMessage = "Preenchimento obrigatório")]
+        public string Cpf { get; set; }
+
+        public DateTime DataNascimento { get; set; }
+
+
+        [Required(ErrorMessage = "Preenchimento obrigatório")]
+        public string Email { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-@using AppDDDProject.AppMvc.Models
-@model Cliente
+@model AppDDDProject.AppMvc.Models.Cliente
 
 <div class="card">                   
   <div class="card-body"> 
@@ -40,7 +39,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">Email</label>
-                    <input type="date" asp-for="Email"  class="form-control"/>
+                    <input type="email" asp-for="Email"  class="form-control"/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>     

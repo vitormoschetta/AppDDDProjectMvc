@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using AppDDDProject.AppMvc.Models;
 using AppDDDProject.Domain.Commands;
 using AppDDDProject.Domain.Handlers;
@@ -15,10 +14,12 @@ namespace AppDDDProject.AppMvc.Controllers
     {
         private readonly IClienteRepository _repository;
         private readonly IMapper _mapper;
-        public ClienteController(IClienteRepository repository, IMapper mapper)
+        private readonly ClienteHandler _handler;
+        public ClienteController(IClienteRepository repository, IMapper mapper, ClienteHandler handler)
         {
             _repository = repository;
             _mapper = mapper;
+            _handler = handler;
         }
 
         public IActionResult Index()
@@ -29,50 +30,52 @@ namespace AppDDDProject.AppMvc.Controllers
         }
 
 
-        public IActionResult Create() => View();
-
-        [HttpPost]
-        public IActionResult Create([FromBody] ClienteCommand command,
-                                    [FromServices] ClienteHandler handler)
+        public IActionResult Create()
         {
-            if (!ModelState.IsValid) return View(command);
-
-            // AutoMapper para converter de Cliente para CreateClienteCommand
-
-            var resultado = (CommandResult)handler.Create(command);
-            if (resultado.Success == false)
-            {
-                ModelState.AddModelError(string.Empty, resultado.Message);
-                return View(command); // retorna commandResult, diferente do tipo CreateclienteCommand/Cliente
-            }
-            return RedirectToAction("Index");
+            return View(new Cliente() { DataNascimento = DateTime.Now });
         }
 
-
-
-        public IActionResult Edit(Guid id,
-                                    [FromServices] ClienteRepository _repository)
-        {
-            var cliente = _repository.GetById(id);
-            return View(cliente);
-        }
-
-
         [HttpPost]
-        public IActionResult Edit([FromBody] ClienteCommand command,
-                                    [FromServices] ClienteHandler handler)
+        public IActionResult Create(Cliente cliente)
         {
             if (!ModelState.IsValid)
+                return View(cliente);
+
+            var clienteCommand = _mapper.Map<ClienteCommand>(cliente);
+
+            var commandResult = (CommandResult)_handler.Create(clienteCommand);
+            if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, "Modelo inválido.");
-                return View(command);
+                ModelState.AddModelError(string.Empty, commandResult.Message);
+                return View(cliente);
             }
 
-            var resultado = (CommandResult)handler.Update(command);
-            if (resultado.Success == false)
+            return RedirectToAction("Index");
+        }
+
+
+
+        public IActionResult Edit(Guid id)
+        {
+            var clienteDomain = _repository.GetById(id);
+            var cliente = _mapper.Map<Cliente>(clienteDomain);
+            return View(cliente);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View(cliente);
+
+            var clienteCommand = _mapper.Map<ClienteCommand>(cliente);
+
+            var commandResult = (CommandResult)_handler.Update(clienteCommand);
+            if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, resultado.Message);
-                return View(resultado); // retorna commandResult, diferente do tipo CreateclienteCommand/Cliente
+                ModelState.AddModelError(string.Empty, commandResult.Message);
+                return View(cliente);
             }
 
             return RedirectToAction("Index");
@@ -81,24 +84,22 @@ namespace AppDDDProject.AppMvc.Controllers
 
 
 
-        public IActionResult Delete(Guid id,
-                                    [FromServices] ClienteRepository _repository)
+        public IActionResult Delete(Guid id)
         {
-            var cliente = _repository.GetById(id);
+            var clienteDomain = _repository.GetById(id);
+            var cliente = _mapper.Map<Cliente>(clienteDomain);
             return View(cliente);
         }
 
 
         [HttpPost]
-        public IActionResult DeleteConfirm(Guid id,
-                                            [FromServices] ClienteHandler handler)
+        public IActionResult DeleteConfirm(Cliente cliente)
         {
-            var resultado = (CommandResult)handler.Delete(id);
-
-            if (resultado.Success != true)
+            var commandResult = (CommandResult)_handler.Delete(cliente.Id);
+            if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, resultado.Message);
-                return View();
+                ModelState.AddModelError(string.Empty, commandResult.Message);
+                return View(cliente);
             }
 
             return RedirectToAction("Index");

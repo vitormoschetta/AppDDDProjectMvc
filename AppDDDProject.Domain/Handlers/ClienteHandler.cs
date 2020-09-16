@@ -54,7 +54,7 @@ namespace AppDDDProject.Domain.Handlers
             // Faz validações de Modelo - Fast Fail Validations:            
             command.Validate();
             if (command.Invalid)
-                return new CommandResult(false, "Não foi possível realizar o cadastro", command.Notifications);
+                return new CommandResult(false, "Não foi possível atualizar", command.Notifications);
 
             // Recupera o cliente (Rehidratação)
             var cliente = _repository.GetById(command.Id);

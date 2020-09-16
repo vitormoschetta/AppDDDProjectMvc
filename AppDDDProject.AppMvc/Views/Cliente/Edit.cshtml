@@ -5,7 +5,8 @@
   <div class="card-body"> 
 
     <form asp-action="Edit" method="POST">  
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>     
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>  
+         
         <input type="hidden" asp-for="Id" />
 
         <div class="row">
@@ -41,7 +42,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">Email</label>
-                    <input type="date" asp-for="Email"  class="form-control"/>
+                    <input type="email" asp-for="Email"  class="form-control"/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>        
