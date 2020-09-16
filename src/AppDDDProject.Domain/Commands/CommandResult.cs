@@ -22,7 +22,7 @@ namespace AppDDDProject.Domain.Commands
 
         public bool Success { get; set; }
         public string Message { get; set; }
-        public IReadOnlyCollection<Notification> Data { get; set; }
-        public object Object { get; set; }
+        public IReadOnlyCollection<Notification> Data { get; set; } // Retornar uma lista com notificações
+        public object Object { get; set; } // Retorna o objeto cadastrado, atualizado ou excluído.
     }
 }

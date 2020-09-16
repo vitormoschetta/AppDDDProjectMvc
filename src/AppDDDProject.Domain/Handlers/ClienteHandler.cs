@@ -19,7 +19,7 @@ namespace AppDDDProject.Domain.Handlers
 
         public ICommandResult Create(ClienteCommand command)
         {
-            //Fast Fail Validations:            
+            //Fast Fail Validations           
             command.Validate();
             if (command.Invalid)
                 return new CommandResult(false, "Não foi possível realizar o cadastro. ", command.Notifications, null);
@@ -35,36 +35,31 @@ namespace AppDDDProject.Domain.Handlers
             // Agrupar as Validações
             AddNotifications(command, cliente);
 
-            // Checar as notificações
+            // Checa se existem notificações
             if (Invalid)
                 return new CommandResult(false, "Não foi possível realizar o cadastro. ", Notifications, null);
 
             // Salvar cliente no banco:     
             _repository.Create(cliente);
 
-            // Enviar Email
-            // _emailService.Enviar(cliente.Nome, cliente.Email, "Bem vindo", "Seu cadastro foi efetuado.");
-
-            // Retornar informações : command result
             return new CommandResult(true, "Cadastro realizado com sucesso. ", Notifications, cliente);
         }
 
         public ICommandResult Update(ClienteCommand command)
         {
-            // Faz validações de Modelo - Fast Fail Validations:            
+            //Fast Fail Validations          
             command.Validate();
             if (command.Invalid)
                 return new CommandResult(false, "Não foi possível atualizar. ", command.Notifications, null);
 
+
             // Recupera o cliente (Rehidratação)
             var cliente = _repository.GetById(command.Id);
-
-            // Gerar Value Objecst (caso esteja trabalahndo com VOs)
 
             // Atualiza
             cliente.AtualizaNomeEDataNascimento(command.Nome, command.DataNascimento);
 
-            // Checar as notificações
+            // Checa se existem notificações
             if (Invalid)
                 return new CommandResult(false, "Não foi possível atualizar. ", Notifications, null);
 
