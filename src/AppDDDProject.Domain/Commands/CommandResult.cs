@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using AppDDDProject.Shared.Commands;
+using Flunt.Notifications;
 
 namespace AppDDDProject.Domain.Commands
 {
@@ -10,7 +13,7 @@ namespace AppDDDProject.Domain.Commands
         public CommandResult()
         { }
 
-        public CommandResult(bool success, string message, object data)
+        public CommandResult(bool success, string message, IReadOnlyCollection<Notification> data, object Object)
         {
             Success = success;
             Message = message;
@@ -19,6 +22,7 @@ namespace AppDDDProject.Domain.Commands
 
         public bool Success { get; set; }
         public string Message { get; set; }
-        public object Data { get; set; }
+        public IReadOnlyCollection<Notification> Data { get; set; }
+        public object Object { get; set; }
     }
 }

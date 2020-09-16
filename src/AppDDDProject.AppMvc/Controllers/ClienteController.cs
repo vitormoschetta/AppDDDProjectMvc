@@ -46,11 +46,17 @@ namespace AppDDDProject.AppMvc.Controllers
             var commandResult = (CommandResult)_handler.Create(clienteCommand);
             if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, commandResult.Message);
+                var notifications = commandResult.Message;
+                foreach (var item in commandResult.Data)
+                {
+                    notifications += $"{item.Message}. ";
+                }
+                ModelState.AddModelError(string.Empty, notifications);
                 return View(cliente);
             }
 
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, commandResult.Message);
+            return View("Details", commandResult.Object);
         }
 
 
@@ -74,11 +80,17 @@ namespace AppDDDProject.AppMvc.Controllers
             var commandResult = (CommandResult)_handler.Update(clienteCommand);
             if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, commandResult.Message);
+                var notifications = commandResult.Message;
+                foreach (var item in commandResult.Data)
+                {
+                    notifications += $"{item.Message}. ";
+                }
+                ModelState.AddModelError(string.Empty, notifications);
                 return View(cliente);
             }
 
-            return RedirectToAction("Index");
+            ModelState.AddModelError(string.Empty, commandResult.Message);
+            return View("Details", commandResult.Object);
         }
 
 

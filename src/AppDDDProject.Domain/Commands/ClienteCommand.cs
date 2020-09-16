@@ -22,13 +22,14 @@ namespace AppDDDProject.Domain.Commands
         public string Email { get; set; }
 
 
-        // Essa validação nem deixa chegar nas entidades, caso inválido:
-        // Tbm está implementada na entidade Cliente. Verificar onde fica melhor deixar a implementação
+        // Fast Fail Validate 
+        // Podemos usar este método para validar a entidade e retornar logo qualquer erro antes de prosseguir com as demais validações
+        // Acaba sendo reduntante as validações do Construtor da Entidade
         public void Validate()
         {
             AddNotifications(
                 new Contract()
-                    .Requires()
+                    .Requires() // Cada um desses métodos invocados adiciona uma Notification caso a propriedade seja inválida
                     .HasMinLen(Nome, 3, "Nome", "Nome tem que ter pelo menos 3 caracteres")
                     .HasLen(Cpf, 11, "CPF", "CPF deve conter 11 digitos")
                     .IsEmail(Email, "Email", "Digite um email válido")

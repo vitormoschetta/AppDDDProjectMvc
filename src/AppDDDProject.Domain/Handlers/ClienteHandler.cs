@@ -19,17 +19,17 @@ namespace AppDDDProject.Domain.Handlers
 
         public ICommandResult Create(ClienteCommand command)
         {
-            // Faz validações de Modelo - Fast Fail Validations:            
+            //Fast Fail Validations:            
             command.Validate();
             if (command.Invalid)
-                return new CommandResult(false, "Não foi possível realizar o cadastro", command.Notifications);
+                return new CommandResult(false, "Não foi possível realizar o cadastro. ", command.Notifications, null);
+
 
             if (_repository.CpfExists(command.Cpf))
-                command.AddNotification("CPF", "Este CPF já está em uso.");
+                AddNotification("CPF", "Este CPF já está em uso. ");
 
-            // Gerar Value Objecst (caso esteja trabalahndo com VOs)
+            // Gerar Value Objecst (caso esteja trabalhando com VOs)
 
-            // Gerar Entidade Cliente   
             var cliente = new Cliente(command.Nome, command.DataNascimento, command.Cpf, command.Email);
 
             // Agrupar as Validações
@@ -37,7 +37,7 @@ namespace AppDDDProject.Domain.Handlers
 
             // Checar as notificações
             if (Invalid)
-                return new CommandResult(false, "Não foi possível realizar o cadastro", command.Notifications);
+                return new CommandResult(false, "Não foi possível realizar o cadastro. ", Notifications, null);
 
             // Salvar cliente no banco:     
             _repository.Create(cliente);
@@ -46,7 +46,7 @@ namespace AppDDDProject.Domain.Handlers
             // _emailService.Enviar(cliente.Nome, cliente.Email, "Bem vindo", "Seu cadastro foi efetuado.");
 
             // Retornar informações : command result
-            return new CommandResult(true, "Cadastro realizado com sucesso.", command.Notifications);
+            return new CommandResult(true, "Cadastro realizado com sucesso. ", Notifications, cliente);
         }
 
         public ICommandResult Update(ClienteCommand command)
@@ -54,7 +54,7 @@ namespace AppDDDProject.Domain.Handlers
             // Faz validações de Modelo - Fast Fail Validations:            
             command.Validate();
             if (command.Invalid)
-                return new CommandResult(false, "Não foi possível atualizar", command.Notifications);
+                return new CommandResult(false, "Não foi possível atualizar. ", command.Notifications, null);
 
             // Recupera o cliente (Rehidratação)
             var cliente = _repository.GetById(command.Id);
@@ -66,13 +66,13 @@ namespace AppDDDProject.Domain.Handlers
 
             // Checar as notificações
             if (Invalid)
-                return new CommandResult(false, "Não foi possível atualizar", command.Notifications);
+                return new CommandResult(false, "Não foi possível atualizar. ", Notifications, null);
 
             // Salva no banco
             _repository.Update(cliente);
 
             // Retornar informações : command result
-            return new CommandResult(true, "Cadastro atualizado com sucesso.", cliente);
+            return new CommandResult(true, "Cadastro atualizado com sucesso. ", Notifications, null);
         }
 
 
@@ -81,13 +81,13 @@ namespace AppDDDProject.Domain.Handlers
             // Recupera o cliente (Rehidratação)
             var cliente = _repository.GetById(id);
             if (cliente == null)
-                return new CommandResult(false, "Cliente não existe", null);
+                return new CommandResult(false, "Cliente não existe. ", Notifications, null);
 
             // Salva no banco
             _repository.Delete(cliente.Id);
 
             // Retornar informações : command result
-            return new CommandResult(true, "Excluído com sucesso.", cliente);
+            return new CommandResult(true, "Informações Excluídas. ", Notifications, cliente);
         }
     }
 }

@@ -4,47 +4,36 @@
 <div class="card">                   
   <div class="card-body"> 
 
-    <form asp-action="DeleteConfirm" method="POST">  
-        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>  
-           
-        <input type="hidden" asp-for="Id" />
+    <form>  
+        <div asp-validation-summary="ModelOnly" class="alert alert-success" role="alert"></div>                  
 
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label class="bmd-label-floating">
-                        <b style="color: red;">Tem certeza que deseja Excluir?</b>
-                    </label>
-                </div>
-            </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">Nome</label>
-                    <br/>@Model.Nome         
+                    <input type="text" asp-for="Nome"  class="form-control" />                    
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">CPF</label>
-                    <br/>@Model.Cpf               
+                    <input type="text" asp-for="Cpf"  class="form-control" />                    
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">Data Nascimento</label>
-                    <br/>@Model.DataNascimento.ToString("dd/MM/yyyy")               
+                    <input type="date" asp-for="DataNascimento"  class="form-control" />                    
                 </div>
-            </div>             
+            </div>      
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="bmd-label-floating">Email</label>
-                    <br/>@Model.Email       
+                    <input type="email" asp-for="Email"  class="form-control" />                    
                 </div>
-            </div>               
+            </div>        
         </div>
-        <div class="row" style="float: right;">
-            <input type="submit" value="Delete" class="btn btn-danger" /> 
+        <div class="row" style="float: right;">             
             <a href="@Url.Action("Index","Cliente")" class="btn btn-secondary">Fechar</a>
         </div>
 
@@ -54,5 +43,4 @@
             
 
 <partial name="_ValidationScriptsPartial">
-
 
