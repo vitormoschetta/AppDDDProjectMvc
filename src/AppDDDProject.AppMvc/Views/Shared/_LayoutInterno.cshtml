@@ -10,21 +10,28 @@
 
   <title>Projeto</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="~/interno/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="~/interno/css/simple-sidebar.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+  <environment include="Development">
+      <!-- Bootstrap core CSS -->
+      <link href="~/interno/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="~/interno/css/simple-sidebar.css" rel="stylesheet">
+      
+      <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
 
-  <link rel="stylesheet" href="~/css/site.css" />
-  <link rel="stylesheet" href="~/css/interno.css" />
-  
-  <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="~/interno/material-dashboard/material-dashboard.css" />
-  <link rel="stylesheet" href="~/interno/material-dashboard/layout-interno.css" />
-  
+      <link rel="stylesheet" href="~/css/site.css" />
+      <link rel="stylesheet" href="~/css/interno.css" />
+      
+      <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+      <link rel="stylesheet" href="~/interno/material-dashboard/material-dashboard.css" />
+      <link rel="stylesheet" href="~/interno/material-dashboard/layout-interno.css" />
+  </environment>
+  <environment exclude="Development">
+      <link rel="stylesheet" href="~/css/site.min.css" />
+      <link rel="stylesheet" href="~/css/outhers.min.css" />
+      <link rel="stylesheet" href="~/interno/material-dashboard/material-dashboard.css" />
+  </environment>
 
+  
 </head>
 
 <body>
