@@ -6,26 +6,25 @@ using AppDDDProject.Domain.Handlers;
 using AppDDDProject.Domain.Repositories;
 using AppDDDProject.Infra.Repositories;
 using AutoMapper;
+using Flunt.Notifications;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppDDDProject.AppMvc.Controllers
 {
     public class ClienteController : Controller
     {
-        private readonly IClienteRepository _repository;
         private readonly IMapper _mapper;
         private readonly ClienteHandler _handler;
-        public ClienteController(IClienteRepository repository, IMapper mapper, ClienteHandler handler)
+        public ClienteController(IMapper mapper, ClienteHandler handler)
         {
-            _repository = repository;
             _mapper = mapper;
             _handler = handler;
         }
 
         public IActionResult Index()
         {
-            var clientesDomain = _repository.GetAll();
-            var clientes = _mapper.Map<IEnumerable<Cliente>>(clientesDomain);
+            var commandResult = _handler.GetAll();
+            var clientes = _mapper.Map<IEnumerable<Cliente>>(commandResult.Objects);
             return View(clientes);
         }
 
@@ -38,33 +37,30 @@ namespace AppDDDProject.AppMvc.Controllers
         [HttpPost]
         public IActionResult Create(Cliente cliente)
         {
-            if (!ModelState.IsValid)
-                return View(cliente);
+            if (!ModelState.IsValid) return View(cliente);
 
             var clienteCommand = _mapper.Map<ClienteCommand>(cliente);
 
             var commandResult = (CommandResult)_handler.Create(clienteCommand);
+
             if (commandResult.Success == false)
             {
-                var notifications = commandResult.Message;
-                foreach (var item in commandResult.Data)
-                {
-                    notifications += $"{item.Message}. ";
-                }
-                ModelState.AddModelError(string.Empty, notifications);
+                ModelState.AddModelError(string.Empty, MontaMensagemNotifications(commandResult));
                 return View(cliente);
             }
 
+            cliente = _mapper.Map<Cliente>(commandResult.Object);
+
             ModelState.AddModelError(string.Empty, commandResult.Message);
-            return View("Details", commandResult.Object);
+            return View("Details", cliente);
         }
 
 
 
         public IActionResult Edit(Guid id)
         {
-            var clienteDomain = _repository.GetById(id);
-            var cliente = _mapper.Map<Cliente>(clienteDomain);
+            var commandResult = _handler.GetById(id);
+            var cliente = _mapper.Map<Cliente>(commandResult.Object);
             return View(cliente);
         }
 
@@ -72,25 +68,22 @@ namespace AppDDDProject.AppMvc.Controllers
         [HttpPost]
         public IActionResult Edit(Cliente cliente)
         {
-            if (!ModelState.IsValid)
-                return View(cliente);
+            if (!ModelState.IsValid) return View(cliente);
 
             var clienteCommand = _mapper.Map<ClienteCommand>(cliente);
 
             var commandResult = (CommandResult)_handler.Update(clienteCommand);
+
             if (commandResult.Success == false)
             {
-                var notifications = commandResult.Message;
-                foreach (var item in commandResult.Data)
-                {
-                    notifications += $"{item.Message}. ";
-                }
-                ModelState.AddModelError(string.Empty, notifications);
+                ModelState.AddModelError(string.Empty, MontaMensagemNotifications(commandResult));
                 return View(cliente);
             }
 
+            cliente = _mapper.Map<Cliente>(commandResult.Object);
+
             ModelState.AddModelError(string.Empty, commandResult.Message);
-            return View("Details", commandResult.Object);
+            return View("Details", cliente);
         }
 
 
@@ -98,8 +91,8 @@ namespace AppDDDProject.AppMvc.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var clienteDomain = _repository.GetById(id);
-            var cliente = _mapper.Map<Cliente>(clienteDomain);
+            var commandResult = _handler.GetById(id);
+            var cliente = _mapper.Map<Cliente>(commandResult.Object);
             return View(cliente);
         }
 
@@ -108,13 +101,26 @@ namespace AppDDDProject.AppMvc.Controllers
         public IActionResult DeleteConfirm(Cliente cliente)
         {
             var commandResult = (CommandResult)_handler.Delete(cliente.Id);
+
             if (commandResult.Success == false)
             {
-                ModelState.AddModelError(string.Empty, commandResult.Message);
+                ModelState.AddModelError(string.Empty, MontaMensagemNotifications(commandResult));
                 return View(cliente);
             }
 
             return RedirectToAction("Index");
+        }
+
+
+        public string MontaMensagemNotifications(CommandResult commandResult)
+        {
+            var notifications = (IEnumerable<Notification>)commandResult.Objects;
+            var message = commandResult.Message;
+            foreach (var item in notifications)
+            {
+                message += $"{item.Message}. ";
+            }
+            return message;
         }
 
 

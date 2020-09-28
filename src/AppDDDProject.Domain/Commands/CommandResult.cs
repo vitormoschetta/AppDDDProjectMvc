@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AppDDDProject.Domain.Entities;
 using AppDDDProject.Shared.Commands;
 using Flunt.Notifications;
 
@@ -13,16 +14,17 @@ namespace AppDDDProject.Domain.Commands
         public CommandResult()
         { }
 
-        public CommandResult(bool success, string message, IReadOnlyCollection<Notification> data, object Object)
+        public CommandResult(bool success, string message, Object objeto, IEnumerable<Object> objects)
         {
             Success = success;
             Message = message;
-            Data = data;
+            Object = objeto;
+            Objects = objects;
         }
 
         public bool Success { get; set; }
         public string Message { get; set; }
-        public IReadOnlyCollection<Notification> Data { get; set; } // Retornar uma lista com notificações
-        public object Object { get; set; } // Retorna o objeto cadastrado, atualizado ou excluído.
+        public Object Object { get; set; } // Retorna o objeto cadastrado, atualizado ou excluído.
+        public IEnumerable<Object> Objects { get; set; }
     }
 }
