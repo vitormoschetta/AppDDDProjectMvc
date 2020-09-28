@@ -25,6 +25,6 @@ namespace AppDDDProject.Domain.Commands
         public bool Success { get; set; }
         public string Message { get; set; }
         public Object Object { get; set; } // Retorna o objeto cadastrado, atualizado ou excluído.
-        public IEnumerable<Object> Objects { get; set; }
+        public IEnumerable<Object> Objects { get; set; } // Retorna ou lista de objetos solicitados, ou Notifications
     }
 }
